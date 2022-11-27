@@ -1,8 +1,9 @@
 <template>
-  <div style="max-width: 85%; margin: 0 auto;">
+<div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout">
+  <div style="max-width: 80%; margin: 0 auto;">
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
-        <a class="navbar-brand" style="font-size: 2.5rem" href="#">jang_du</a>
+        <a class="navbar-brand" style="font-size: 2.5rem; cursor: pointer;" @click="$router.push('/')">jangdu_Blog</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -12,7 +13,7 @@
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" style="cursor: pointer;" @click="$router.push('/write')">글쓰기</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled">Disabled</a>
@@ -36,17 +37,25 @@
         </div>
       </div>
     </nav>
-    <div class="blog-body">
+  </div>
+  <div class="blog-body">
+    <aside class="side-bar left-body" style="">
+      <BlogCategorize />
+    </aside>
+    <div class="app-body">
       <router-view/>
     </div>
   </div>
+</div>
 </template>
 <script setup>
-
+import BlogCategorize from './components/BlogCategorize.vue'
 </script>
 <script>
 export default {
-  components: {},
+  components: {
+    BlogCategorize
+  },
   data () {
     return {
       sampleData: ''
@@ -72,5 +81,14 @@ export default {
   margin: 0 auto;
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+.left-body{
+  margin-top: 10rem;
+  position: fixed;
+}
+.app-body{
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
 }
 </style>

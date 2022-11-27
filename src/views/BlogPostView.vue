@@ -2,7 +2,7 @@
   <div class="post-body">
     <div class="post-head">
       <div class="post-info">
-        <h1>Title</h1>
+        <h1>{{nowDb.title}}</h1>
         <div class="head-btns">
           <button class="head-btn">수정</button>
           <button class="head-btn">삭제</button>
@@ -19,13 +19,19 @@
     <div class="div-bar"></div>
     <div class="post">
       <div class="post-content">
-        <div class="output" v-html="`aaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>aaaaaaaa<br/>a`"></div>
+        <div class="output" v-html="output"></div>
       </div>
     </div>
     <div class="div-bar"></div>
     <div class="d-flex post-bottom">
-      <div class="p-2 flex-fill btn left-btn">이전포스트</div>
-      <div class="p-2 flex-fill btn right-btn">다음포스트</div>
+      <div class="p-2 flex-fill btn btn-outline-dark left-btn"  @click="onClickbeforePost">
+        <span style="font-size: 0.8rem; margin-bottom: 0.5rem;">이전 글</span>
+        <h4>이전 글 제목</h4>
+      </div>
+      <div class="p-2 flex-fill btn btn-outline-dark right-btn" @click="router.push('post/' + Number(nowDbIndex) + 1)">
+        <span style="font-size: 0.8rem; margin-bottom: 0.5rem;">다음 글</span>
+        <h4>다음 글 제목</h4>
+      </div>
     </div>
     <div class="comment-div">
       <h4 class="comment-head">2개의 댓글</h4>
@@ -61,6 +67,24 @@
     </div>
   </div>
 </template>
+<script setup>
+import { useStore } from 'vuex'
+import { marked } from 'marked'
+import { useRoute, useRouter } from 'vue-router'
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
+const nowDbIndex = route.params.id
+store.state.nowPost = store.state.postDb[nowDbIndex]
+const nowDb = store.state.nowPost
+console.log(nowDbIndex)
+
+const output = marked(nowDb.content)
+const onClickbeforePost = () => {
+  router.push('post/' + (Number(nowDbIndex) - 1))
+}
+
+</script>
 <script>
 export default {
   components: {},
@@ -71,9 +95,11 @@ export default {
   },
   setup () {},
   created () {},
-  mounted () {},
+  mounted () {
+  },
   unmounted () {},
-  methods: {}
+  methods: {
+  }
 }
 </script>
 <style scoped>
@@ -148,22 +174,35 @@ export default {
   margin-top: 10rem;
   margin-bottom: 5rem;
   width: 100%;
-  height: 3.5rem;
+  height: 4rem;
   margin-right: auto;
   margin-left: auto;
   display: flex;
+  flex: 1 1 0%;
+  align-items: center;
 }
 .left-btn{
   text-align: left;
-  padding-left: 3rem;
-  background-color: rgb(226, 226, 226);
   margin-right: 2rem;
+  flex-direction: column;
+  line-height: 1;
+  display: flex;
+  flex: 1 1 0%;
+  align-items: flex-start;
+  padding: 2rem;
+  border: 1px solid rgb(138, 138, 138, .5);
 }
 .right-btn{
-  background-color: rgb(226, 226, 226);
   margin-left: 2rem;
   text-align: right;
   padding-right: 3rem;
+  flex-direction: column;
+  line-height: 1;
+  display: flex;
+  flex: 1 1 0%;
+  align-items: flex-end;
+  padding: 2rem;
+  border: 0.5px solid rgb(138, 138, 138, .5);
 }
 
 .div-bar{

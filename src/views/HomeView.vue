@@ -1,17 +1,23 @@
 <template>
-  <div class="home">
-    <BlogProfile/>
+  <div class="home mt-4">
+    <BlogPostList/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import BlogProfile from '@/components/BlogProfile.vue'
+import BlogPostList from '@/components/BlogPostList.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    BlogProfile
+    BlogPostList
   }
 }
 </script>
+<style scoped>
+.home{
+  width: 80%;
+  margin: 0 auto;
+}
+</style>

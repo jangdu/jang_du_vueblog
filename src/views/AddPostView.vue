@@ -49,6 +49,12 @@ const newPost = ref({
   content: ''
 })
 
+const output = computed(() => marked(newPost.value.content))
+
+const update = debounce((e) => {
+  newPost.value.content = e.target.value
+}, 100)
+
 const addTodo = () => {
   addDoc(blogPostsCollectionRef, {
     content: newPost.value.content,
@@ -58,12 +64,6 @@ const addTodo = () => {
   })
   newPost.value.content = ''
 }
-
-const output = computed(() => marked(newPost.value.content))
-
-const update = debounce((e) => {
-  newPost.value.content = e.target.value
-}, 100)
 </script>
 
 <script>
