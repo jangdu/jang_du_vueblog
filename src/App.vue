@@ -50,6 +50,7 @@
 </template>
 <script setup>
 import BlogCategorize from './components/BlogCategorize.vue'
+
 </script>
 <script>
 export default {

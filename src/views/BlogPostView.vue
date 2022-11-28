@@ -28,7 +28,7 @@
         <span style="font-size: 0.8rem; margin-bottom: 0.5rem;">이전 글</span>
         <h4>이전 글 제목</h4>
       </div>
-      <div class="p-2 flex-fill btn btn-outline-dark right-btn" @click="router.push('post/' + Number(nowDbIndex) + 1)">
+      <div class="p-2 flex-fill btn btn-outline-dark right-btn" @click="router.push((Number(nowDbIndex) + 1))">
         <span style="font-size: 0.8rem; margin-bottom: 0.5rem;">다음 글</span>
         <h4>다음 글 제목</h4>
       </div>
@@ -81,7 +81,7 @@ console.log(nowDbIndex)
 
 const output = marked(nowDb.content)
 const onClickbeforePost = () => {
-  router.push('post/' + (Number(nowDbIndex) - 1))
+  router.push((Number(nowDbIndex) - 1))
 }
 
 </script>

@@ -29,7 +29,11 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    // 언제나 페이지 제일 위로 이동하기
+    return { top: 0 }
+  }
 })
 
 export default router

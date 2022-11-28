@@ -1,7 +1,7 @@
 <template>
   <div class="list-body">
-    <div v-for="item in store.state.postDb" :key="item" class="post-list">
-      <h4 @click="onClickTitle(item.id)">{{item.title}}</h4>
+    <div v-for="item in thisList" :key="item" class="post-list">
+      <h4 @click="onClickTitle(item.id)" style="cursor: pointer;">{{item.title}}</h4>
       <p>Blogcontent: 컴포넌트는 mount, update, unmount 되는데이 사이사이에 간섭을 할 수 있으며, 특정 상황에서 특정 코드를 실행할 수 있다.쉽게말해서 어떤 컴포넌트가 생성될 때(mount), 재랜더링될때(update), 삭제될때(unmount) 각각 다른 상황에서 특정코</p>
       <button class="btn btn-outline-dark btn-sm">{{item.tag}}</button>
       <div class="list-info">
@@ -10,21 +10,27 @@
         <span>댓글 0개</span>
       </div>
     </div>
+    <button type="button" class="btn btn-outline-info"></button>
+    <button type="button" class="btn btn-outline-info"></button>
   </div>
 </template>
 <script setup>
 import { db } from '@/firebase'
 import { useStore } from 'vuex'
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore'
-import { onMounted } from '@vue/runtime-core'
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
+import { onMounted, ref } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 
+const itemNum = ref(5)
 const blogPostCollectionRef = collection(db, 'blog-post')
-const blogPostCollectionQuery = query(blogPostCollectionRef, orderBy('date', 'desc'), limit(5))
+const blogPostCollectionQuery = query(blogPostCollectionRef, orderBy('date', 'desc'))
 const store = useStore()
 const router = useRouter()
+const thisList = ref([])
+const i = 0
 
 onMounted(async () => {
+  itemNum.value = 5
   onSnapshot(blogPostCollectionQuery, (querySnapshot) => {
     const fireData = []
     const cities = []
@@ -41,6 +47,12 @@ onMounted(async () => {
       fireData.push(post)
     })
     store.state.postDb = fireData
+    store.state.postDb.forEach((element) => {
+      thisList.value.push(element)
+      if (i.value === ref) {
+        return false
+      }
+    })
   })
 })
 
