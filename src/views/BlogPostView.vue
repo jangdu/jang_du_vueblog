@@ -268,4 +268,8 @@ export default {
   word-break: keep-all;
   overflow-wrap: break-word;
 }
+
+pre {
+  background-color: aqua;
+}
 </style>

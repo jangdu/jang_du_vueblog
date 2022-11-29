@@ -1,36 +1,73 @@
 <template>
   <div class="list-body">
+    <form class="d-flex me-2" role="search">
+      <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search">
+    </form>
     <div v-for="item in thisList" :key="item" class="post-list">
       <h4 @click="onClickTitle(item.id)" style="cursor: pointer;">{{item.title}}</h4>
       <p>Blogcontent: 컴포넌트는 mount, update, unmount 되는데이 사이사이에 간섭을 할 수 있으며, 특정 상황에서 특정 코드를 실행할 수 있다.쉽게말해서 어떤 컴포넌트가 생성될 때(mount), 재랜더링될때(update), 삭제될때(unmount) 각각 다른 상황에서 특정코</p>
-      <button class="btn btn-outline-dark btn-sm">{{item.tag}}</button>
+      <button class="btn btn-outline-dark btn-sm" @click="onClickTagBtn(item.tag)">{{item.tag}}</button>
       <div class="list-info">
         <span>{{item.date}}</span>
         <div class="ms-2 me-2">|</div>
         <span>댓글 0개</span>
       </div>
     </div>
-    <button type="button" class="btn btn-outline-info"></button>
-    <button type="button" class="btn btn-outline-info"></button>
   </div>
 </template>
 <script setup>
 import { db } from '@/firebase'
 import { useStore } from 'vuex'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
-import { onMounted, ref } from '@vue/runtime-core'
-import { useRouter } from 'vue-router'
+import { onMounted, onUpdated, ref } from '@vue/runtime-core'
+import { useRouter, useRoute } from 'vue-router'
 
 const itemNum = ref(5)
 const blogPostCollectionRef = collection(db, 'blog-post')
 const blogPostCollectionQuery = query(blogPostCollectionRef, orderBy('date', 'desc'))
 const store = useStore()
 const router = useRouter()
+const selectTag = ref('')
+const route = useRoute()
 const thisList = ref([])
-const i = 0
+
+const onClickTagBtn = (tag) => {
+  router.push('/list/' + tag)
+}
+
+const showList = () => {
+  selectTag.value = route.params.tag
+  console.log(selectTag)
+  itemNum.value = 5
+  if (selectTag.value === 'all') {
+    thisList.value = []
+    thisList.value = store.state.postDb
+  } else {
+    const tagPost = store.state.postDb.filter(element => element.tag === selectTag.value)
+    thisList.value = []
+    thisList.value = tagPost
+    console.log(tagPost)
+  }
+  /*
+  store.state.postDb.forEach((element) => {
+    if (thisList.value.length === itemNum.value) {
+      return false
+    } else {
+      thisList.value.push(element)
+    }
+  })
+  */
+}
+
+onUpdated(() => {
+  showList()
+})
 
 onMounted(async () => {
+  selectTag.value = route.params.tag
+  console.log(selectTag)
   itemNum.value = 5
+
   onSnapshot(blogPostCollectionQuery, (querySnapshot) => {
     const fireData = []
     const cities = []
@@ -47,15 +84,9 @@ onMounted(async () => {
       fireData.push(post)
     })
     store.state.postDb = fireData
-    store.state.postDb.forEach((element) => {
-      thisList.value.push(element)
-      if (i.value === ref) {
-        return false
-      }
-    })
+    showList()
   })
 })
-
 const onClickTitle = (id) => {
   const filterDb = store.state.postDb.filter(item => item.id === id)
   // store.state.nowPost = store.state.postDb[store.state.postDb.indexOf(filterDb[0])]
@@ -70,7 +101,8 @@ export default {
       sampleData: ''
     }
   },
-  setup () {},
+  setup () {
+  },
   created () {},
   mounted () {},
   unmounted () {},

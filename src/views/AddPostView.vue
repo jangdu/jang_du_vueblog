@@ -7,8 +7,10 @@
             <textarea class="write-Title" placeholder="제목을 입력하세요" v-model="newPost.title"/>
             <div class="div-bar"></div>
             <div class="select-tag">
-              <div class="tags">aaa</div>
-              <input type="text" class="input-tag" v-model="newPost.tag" placeholder="태그를 입력하세요">
+              <select class="form-select form-select-sm mb-2" style="width: 7rem;" v-model="newtag" aria-label=".form-select-sm example">
+                <option selected>태그 선택</option>
+                <option v-for="item in $store.state.tagPost" :value="item.tag" :key="item">{{item.tag}}</option>
+              </select>
             </div>
             <div class="button-bar">
               <button class="btn btn-outline-dark write-btn">T</button>
@@ -48,7 +50,7 @@ const newPost = ref({
   tag: 'vue.js',
   content: ''
 })
-
+const newtag = ref('')
 const output = computed(() => marked(newPost.value.content))
 
 const update = debounce((e) => {
@@ -60,7 +62,7 @@ const addTodo = () => {
     content: newPost.value.content,
     title: newPost.value.title,
     date: Date.now(),
-    tag: newPost.value.tag
+    tag: newtag.value
   })
   newPost.value.content = ''
 }

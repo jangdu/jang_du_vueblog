@@ -1,17 +1,15 @@
 <template>
   <div class="home mt-4">
-    <BlogPostList/>
+    <button @click="$router.push('/list/all')">List</button>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import BlogPostList from '@/components/BlogPostList.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    BlogPostList
   }
 }
 </script>

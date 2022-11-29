@@ -3,7 +3,9 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     postDb: [],
-    nowPost: {}
+    nowPost: {},
+    tagPost: [],
+    selectedPost: []
   },
   getters: {
   },
