@@ -9,10 +9,10 @@
         </div>
         <div class="post-information">
           <span class="post-name">jang_du</span>
-          <span>2022.12.12</span>
+          <span>{{yyyyMMdd(nowDb.date)}}</span>
         </div>
         <div class="post-tag">
-          <div class="tags">aaa</div>
+          <div class="tags">{{nowDb.tag}}</div>
         </div>
       </div>
     </div>
@@ -28,27 +28,27 @@
         <span style="font-size: 0.8rem; margin-bottom: 0.5rem;">이전 글</span>
         <h4>이전 글 제목</h4>
       </div>
-      <div class="p-2 flex-fill btn btn-outline-dark right-btn" @click="router.push((Number(nowDbIndex) + 1))">
+      <div class="p-2 flex-fill btn btn-outline-dark right-btn" @click="router.push('/post/' + (Number(nowDbIndex) + 1))">
         <span style="font-size: 0.8rem; margin-bottom: 0.5rem;">다음 글</span>
         <h4>다음 글 제목</h4>
       </div>
     </div>
     <div class="comment-div">
-      <h4 class="comment-head">2개의 댓글</h4>
+      <h4 class="comment-head">{{commentLength}}개의 댓글</h4>
       <div class="comment-body">
         <div class="comment-input">
-          <textarea class="comment-text" placeholder="댓글을 입력하세요"></textarea>
+          <textarea class="comment-text" placeholder="댓글을 입력하세요" v-model="newComment.content"></textarea>
           <div class="comment-button">
-            <button class="btn btn-outline-dark">댓글 작성</button>
+            <button @click="onClickAddCommentBtn(nowDbIndex)" class="btn btn-outline-dark">댓글 작성</button>
           </div>
         </div>
         <div>
           <div class="comment-list">
-            <div v-for="item in 3" :key="item" class="commnet">
+            <div v-for="item in nowDb.commentDb" :key="item" class="commnet">
               <div class="commnet-top">
                 <div class="commnet-info">
-                  <span class="post-name">jang_du</span>
-                  <span>2022.12.12</span>
+                  <span class="post-name">{{item.name}}</span>
+                  <span>{{yyyyMMdd(item.date)}}</span>
                 </div>
                 <div class="head-btns">
                   <button class="head-btn">수정</button>
@@ -57,7 +57,7 @@
               </div>
               <div class="commnet-content">
                 <div>
-                  <p>aaaaaanvkndvkalsnn;a</p>
+                  <p>{{item.content}}</p>
                 </div>
               </div>
             </div>
@@ -71,19 +71,111 @@
 import { useStore } from 'vuex'
 import { marked } from 'marked'
 import { useRoute, useRouter } from 'vue-router'
-const store = useStore()
+import { onMounted, ref, watch } from '@vue/runtime-core'
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from '@firebase/firestore'
+import { db } from '../firebase'
+
+// refs
+const nowDb = ref({})
+const output = ref('')
+const newComment = ref({
+  content: '',
+  name: 'jang',
+  date: '0000.0'
+})
+const nowDbIndex = ref(0)
+const commentLength = ref(0)
+
+// router
 const route = useRoute()
 const router = useRouter()
-const nowDbIndex = route.params.id
-store.state.nowPost = store.state.postDb[nowDbIndex]
-const nowDb = store.state.nowPost
-console.log(nowDbIndex)
+nowDbIndex.value = Number(route.params.id)
 
-const output = marked(nowDb.content)
+const store = useStore()
+store.state.nowPost = store.state.postDb[nowDbIndex.value]
+nowDb.value = store.state.nowPost
+
+// commentDb null check
+
+// collectinRefs
+const blogPostsCollectionRef = collection(db, 'blog-post')
+const blogPostCollectionQuery = query(blogPostsCollectionRef, orderBy('date', 'desc'))
+
+onMounted(async () => {
+  onSnapshot(blogPostCollectionQuery, (querySnapshot) => {
+    const fireData = []
+    const cities = []
+    querySnapshot.forEach((doc, i) => {
+      cities.push(doc.data().name)
+      if (nowDb.value.id === doc.id) {
+        const postComment = doc.data().commentDb
+        nowDb.value.commentDb = postComment
+        return false
+      }
+    })
+  })
+
+  if (!nowDb.value.commentDb) {
+    commentLength.value = 0
+  } else {
+    commentLength.value = nowDb.value.commentDb.length
+  }
+})
+
+// watch
+watch(route, (element) => {
+  nowDbIndex.value = element.params.id
+  console.log(nowDbIndex.value)
+  store.state.nowPost = store.state.postDb[nowDbIndex.value]
+  nowDb.value = store.state.nowPost
+  output.value = marked(nowDb.value.content)
+})
+
+output.value = marked(nowDb.value.content)
+
+// onClick fucntions
 const onClickbeforePost = () => {
-  router.push((Number(nowDbIndex) - 1))
+  router.push('/post/' + (nowDbIndex.value - 1))
 }
 
+const yyyyMMdd = (value) => {
+  // 들어오는 value 값이 공백이면 그냥 공백으로 돌려줌
+  if (value === '') return ''
+
+  // 현재 Date 혹은 DateTime 데이터를 javaScript date 타입화
+  const jsdate = new Date(value)
+
+  // 연도, 월, 일 추출
+  const year = jsdate.getFullYear()
+  let month = jsdate.getMonth() + 1
+  let day = jsdate.getDate()
+
+  // 월, 일의 경우 한자리 수 값이 있기 때문에 공백에 0 처리
+  if (month < 10) {
+    month = '0' + month
+  }
+
+  if (day < 10) {
+    day = '0' + day
+  }
+
+  // 최종 포맷 (ex - '2021-10-08')
+  return year + '-' + month + '-' + day
+}
+
+const onClickAddCommentBtn = (a) => {
+  console.log(a)
+  newComment.value.date = Date()
+  if (!nowDb.value.commentDb) {
+    nowDb.value.commentDb = [newComment.value]
+  } else {
+    nowDb.value.commentDb.push(newComment.value)
+  }
+  updateDoc(doc(blogPostsCollectionRef, nowDb.value.id), {
+    commentDb: nowDb.value.commentDb
+  })
+  newComment.value.content = ''
+}
 </script>
 <script>
 export default {

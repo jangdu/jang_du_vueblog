@@ -5,7 +5,8 @@ export default createStore({
     postDb: [],
     nowPost: {},
     tagPost: [],
-    selectedPost: []
+    selectedPost: [],
+    test: {}
   },
   getters: {
   },

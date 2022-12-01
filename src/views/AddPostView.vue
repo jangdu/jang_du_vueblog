@@ -27,7 +27,7 @@
       </div>
       <div class="write-nav bottom-0">
         <div class="nav-button-bar">
-          <button class="btn btn-outline-dark">Back</button>
+          <button class="btn btn-outline-dark" @click="$router.go(-1)">Back</button>
           <button class="btn btn-outline-dark" @click="addTodo">Uplode</button>
         </div>
       </div>
@@ -47,7 +47,7 @@ const blogPostsCollectionRef = collection(db, 'blog-post')
 
 const newPost = ref({
   title: '',
-  tag: 'vue.js',
+  tag: '',
   content: ''
 })
 const newtag = ref('')
@@ -61,10 +61,14 @@ const addTodo = () => {
   addDoc(blogPostsCollectionRef, {
     content: newPost.value.content,
     title: newPost.value.title,
-    date: Date.now(),
+    date: Date(),
     tag: newtag.value
   })
-  newPost.value.content = ''
+  newPost.value = {
+    title: '',
+    tag: '',
+    content: ''
+  }
 }
 </script>
 
