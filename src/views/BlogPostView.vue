@@ -4,8 +4,8 @@
       <div class="post-info">
         <h1>{{nowDb.title}}</h1>
         <div class="head-btns">
-          <button class="head-btn">수정</button>
-          <button class="head-btn">삭제</button>
+          <button class="head-btn" @click="onClickUpdatePostBtn(nowDb.id)">수정</button>
+          <button class="head-btn" @click="onClickDelPostBtn(nowDb.id)">삭제</button>
         </div>
         <div class="post-information">
           <span class="post-name">jang_du</span>
@@ -72,7 +72,7 @@ import { useStore } from 'vuex'
 import { marked } from 'marked'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref, watch } from '@vue/runtime-core'
-import { collection, doc, onSnapshot, orderBy, query, updateDoc } from '@firebase/firestore'
+import { collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc } from '@firebase/firestore'
 import { db } from '../firebase'
 
 // refs
@@ -161,6 +161,15 @@ const yyyyMMdd = (value) => {
 
   // 최종 포맷 (ex - '2021-10-08')
   return year + '-' + month + '-' + day
+}
+
+const onClickDelPostBtn = (id) => {
+  deleteDoc(doc(blogPostsCollectionRef, id))
+  router.go(-1)
+}
+
+const onClickUpdatePostBtn = (id) => {
+  router.push('/write')
 }
 
 const onClickAddCommentBtn = (a) => {

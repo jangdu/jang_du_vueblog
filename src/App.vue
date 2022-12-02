@@ -1,33 +1,13 @@
 <template>
-<div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout">
-  <div style="max-width: 80%; margin: 0 auto;">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <a class="navbar-brand" style="font-size: 2.5rem; cursor: pointer;" @click="$router.push('/')">jangdu_Blog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled">Disabled</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" style="cursor: pointer;" @click="$router.push('/write')">글쓰기</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+<div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout" style="min-width: 500px;">
+  <div class="position-relative" style="height: 8rem;">
+    <h1 class="position-absolute top-50 start-50 translate-middle head-title">Jangdu Blog</h1>
   </div>
   <div class="blog-body">
-    <aside class="side-bar left-body" style="">
+    <aside class="d-none d-xl-block d-xxl-block side-bar left-body" style="">
       <BlogCategorize />
     </aside>
-    <div class="app-body">
+    <div class="app-body container-sm">
       <router-view/>
     </div>
   </div>
@@ -74,7 +54,11 @@ export default {
 }
 .app-body{
   display: flex;
-  width: 80%;
+  max-width: 900px;
+  width: 100%;
   margin: 0 auto;
+}
+.head-title{
+  cursor: pointer;
 }
 </style>
