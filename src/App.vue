@@ -1,10 +1,10 @@
 <template>
 <div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout" style="min-width: 500px;">
   <div class="position-relative" style="height: 8rem;">
-    <h1 class="position-absolute top-50 start-50 translate-middle head-title">Jangdu Blog</h1>
+    <h1 class="position-absolute top-50 start-50 translate-middle head-title" @click="$router.push('/')">Jangdu Blog</h1>
   </div>
   <div class="blog-body">
-    <aside class="d-none d-xl-block d-xxl-block side-bar left-body" style="">
+    <aside class="d-none d-lg-block d-xl-block d-xxl-block side-bar left-body">
       <BlogCategorize />
     </aside>
     <div class="app-body container-sm">
@@ -15,24 +15,6 @@
 </template>
 <script setup>
 import BlogCategorize from './components/BlogCategorize.vue'
-
-</script>
-<script>
-export default {
-  components: {
-    BlogCategorize
-  },
-  data () {
-    return {
-      sampleData: ''
-    }
-  },
-  setup () {},
-  created () {},
-  mounted () {},
-  unmounted () {},
-  methods: {}
-}
 </script>
 <style scoped>
 .blog-body{

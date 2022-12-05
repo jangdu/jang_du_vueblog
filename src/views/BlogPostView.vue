@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="comment-div">
-      <h4 class="comment-head">{{commentLength}}개의 댓글</h4>
+      <h4 class="comment-head">{{nowDb.commentLength}}개의 댓글</h4>
       <div class="comment-body">
         <div class="comment-input">
           <textarea class="comment-text" placeholder="댓글을 입력하세요" v-model="newComment.content"></textarea>
@@ -110,6 +110,7 @@ onMounted(async () => {
       if (nowDb.value.id === doc.id) {
         const postComment = doc.data().commentDb
         nowDb.value.commentDb = postComment
+        commentLength.value = doc.data().commentLength
         return false
       }
     })
@@ -118,7 +119,7 @@ onMounted(async () => {
   if (!nowDb.value.commentDb) {
     commentLength.value = 0
   } else {
-    commentLength.value = nowDb.value.commentDb.length
+    commentLength.value = nowDb.value.commentLength
   }
 })
 
@@ -181,7 +182,8 @@ const onClickAddCommentBtn = (a) => {
     nowDb.value.commentDb.push(newComment.value)
   }
   updateDoc(doc(blogPostsCollectionRef, nowDb.value.id), {
-    commentDb: nowDb.value.commentDb
+    commentDb: nowDb.value.commentDb,
+    commentLength: nowDb.value.commentDb.length
   })
   newComment.value.content = ''
 }

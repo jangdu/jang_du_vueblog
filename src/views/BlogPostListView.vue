@@ -1,18 +1,21 @@
 <template>
   <div class="list-body">
-    <button class="btn btn-outline-dark me-3">글쓰기</button>
-    <button v-show="true" class="btn btn-outline-dark" @click="$router.push('/write')">글쓰기</button>
+    <div class="d-flex flex-row-reverse list-header">
+      <button v-show="true" class="btn btn-outline-dark ms-2" @click="$router.push('/write')">글쓰기</button>
+      | <button class="btn btn-outline-dark ms-2 me-2">회원가입</button>
+      <span>댓글을 작성하려면 </span>
+    </div>
     <textarea class="shadow-sm search-input mt-3" :value='searchInput' type="text" @input="update" placeholder="Search"></textarea>
     <p style="display: none;">{{output}}</p>
     <div v-if="true" style="width: 100%; margin-top: 3rem;">
-      <div v-for="item in thisList" :key="item" class="shadow p-3 mb-5 bg-body rounded post-list">
+      <div v-for="item in thisList" :key="item" class="shadow p-3 mb-5 rounded post-list">
         <button @click="onClickTitle(item.id)" class="btn btn-toggle align-items-center rounded" style="font-size: 2rem; font-weight: bold;">{{item.title}}</button>
         <p v-html="marked(contentPreview(item.content))"></p>
         <button class="btn btn-outline-dark btn-sm" @click="onClickTagBtn(item.tag)">{{item.tag}}</button>
         <div class="list-info">
           <span>{{yyyyMMdd(item.date)}}</span>
           <div class="ms-2 me-2">|</div>
-          <span>댓글 0개</span>
+          <span>댓글 {{item.commentLength}}개</span>
         </div>
       </div>
     </div>
@@ -55,7 +58,8 @@ onMounted(async () => {
         content: doc.data().content,
         title: doc.data().title,
         date: doc.data().date,
-        tag: doc.data().tag
+        tag: doc.data().tag,
+        commentLength: doc.data().commentLength
       }
       fireData.push(post)
     })
@@ -126,7 +130,6 @@ const yyyyMMdd = (value) => {
   if (month < 10) {
     month = '0' + month
   }
-
   if (day < 10) {
     day = '0' + day
   }
@@ -189,5 +192,9 @@ const onClickTagBtn = (tag) => {
 }
 code {
   display: none;
+}
+.list-header{
+  align-items: center;
+  display: flex;
 }
 </style>

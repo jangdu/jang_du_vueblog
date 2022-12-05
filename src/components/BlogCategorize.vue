@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="flex-shrink-0 p-3 bg-white" style="width: 150px;">
+    <div class="flex-shrink-0 ps-3" style="width: 120px; margin: 0 auto; background-color: transparent;">
       <a class="d-flex align-items-center pb-1 mb-1 link-dark text-decoration-none border-bottom">
-        <p>태그 목록</p>
+        <p>태그</p>
       </a>
       <ul class="list-unstyled ps-0">
         <li class="mb-1" style="">
