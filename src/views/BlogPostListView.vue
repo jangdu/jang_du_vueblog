@@ -2,7 +2,13 @@
   <div class="list-body">
     <div class="d-flex flex-row-reverse list-header">
       <button v-show="true" class="btn btn-outline-dark ms-2" @click="$router.push('/write')">글쓰기</button>
-      | <button class="btn btn-outline-dark ms-2 me-2">회원가입</button>
+      |
+      <button id="login-Modal" class="btn btn-outline-dark ms-2 me-2" @click="loginModalBool = true">로그인</button>
+      <Teleport to="body">
+        <!-- use the modal component, pass in the prop -->
+        <Signin :show="loginModalBool" @close="loginModalBool = false">
+        </Signin>
+      </Teleport>
       <span>댓글을 작성하려면 </span>
     </div>
     <textarea class="shadow-sm search-input mt-3" :value='searchInput' type="text" @input="update" placeholder="Search"></textarea>
@@ -29,9 +35,11 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { computed, onMounted, ref, watch } from '@vue/runtime-core'
 import { useRouter, useRoute } from 'vue-router'
 import { debounce } from 'lodash'
+import Signin from '../components/SignIn.vue'
 
 // store
 const store = useStore()
+const loginModalBool = ref(false)
 
 // router
 const router = useRouter()
@@ -157,6 +165,7 @@ const onClickTitle = (id) => {
 const onClickTagBtn = (tag) => {
   router.push('/list/' + tag)
 }
+
 </script>
 <style scoped>
 .list-body{

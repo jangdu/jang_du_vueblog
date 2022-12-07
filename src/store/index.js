@@ -6,7 +6,8 @@ export default createStore({
     nowPost: {},
     tagPost: [],
     selectedPost: [],
-    test: {}
+    test: {},
+    loginType: {}
   },
   getters: {
   },
